@@ -19,12 +19,8 @@ export async function loadAllFiles(): Promise<HtmlFile[]> {
   try {
     await ensureDir();
     const info = await FileSystem.getInfoAsync(META_FILE);
-    if (!info.exists) {
-      return [];
-    }
-    const raw = await FileSystem.readAsStringAsync(META_FILE, {
-      encoding: FileSystem.EncodingType.UTF8,
-    });
+    if (!info.exists) return [];
+    const raw = await FileSystem.readAsStringAsync(META_FILE, { encoding: FileSystem.EncodingType.UTF8 });
     const data: MetaData = JSON.parse(raw);
     return data.files || [];
   } catch {
@@ -36,9 +32,7 @@ export async function loadFileContent(id: string): Promise<string> {
   try {
     const info = await FileSystem.getInfoAsync(`${STORAGE_DIR}${id}.html`);
     if (!info.exists) return '';
-    return await FileSystem.readAsStringAsync(`${STORAGE_DIR}${id}.html`, {
-      encoding: FileSystem.EncodingType.UTF8,
-    });
+    return await FileSystem.readAsStringAsync(`${STORAGE_DIR}${id}.html`, { encoding: FileSystem.EncodingType.UTF8 });
   } catch {
     return '';
   }
@@ -47,9 +41,7 @@ export async function loadFileContent(id: string): Promise<string> {
 export async function saveFile(id: string, content: string): Promise<void> {
   try {
     await ensureDir();
-    await FileSystem.writeAsStringAsync(`${STORAGE_DIR}${id}.html`, content, {
-      encoding: FileSystem.EncodingType.UTF8,
-    });
+    await FileSystem.writeAsStringAsync(`${STORAGE_DIR}${id}.html`, content, { encoding: FileSystem.EncodingType.UTF8 });
   } catch (e) {
     console.error('saveFile error', e);
   }
@@ -66,9 +58,7 @@ export async function createFile(name: string, content: string): Promise<HtmlFil
     updatedAt: now,
   };
   await ensureDir();
-  await FileSystem.writeAsStringAsync(`${STORAGE_DIR}${id}.html`, content, {
-    encoding: FileSystem.EncodingType.UTF8,
-  });
+  await FileSystem.writeAsStringAsync(`${STORAGE_DIR}${id}.html`, content, { encoding: FileSystem.EncodingType.UTF8 });
   const files = await loadAllFiles();
   files.unshift(file);
   await persistMeta(files);
@@ -102,18 +92,26 @@ export async function deleteFile(id: string): Promise<HtmlFile[]> {
 }
 
 export async function renameFile(id: string, newName: string): Promise<HtmlFile[]> {
-  return updateFileMeta(id, {
-    name: newName.endsWith('.html') ? newName : `${newName}.html`,
-  });
+  return updateFileMeta(id, { name: newName.endsWith('.html') ? newName : `${newName}.html` });
 }
 
 async function persistMeta(files: HtmlFile[]): Promise<void> {
   await ensureDir();
-  await FileSystem.writeAsStringAsync(META_FILE, JSON.stringify({ files }), {
-    encoding: FileSystem.EncodingType.UTF8,
-  });
+  await FileSystem.writeAsStringAsync(META_FILE, JSON.stringify({ files }), { encoding: FileSystem.EncodingType.UTF8 });
 }
 
 export async function getFileUri(id: string): Promise<string> {
   return `${STORAGE_DIR}${id}.html`;
+}
+
+export async function importFile(name: string, content: string): Promise<HtmlFile> {
+  const cleanName = name.endsWith('.html') || name.endsWith('.htm') ? name : `${name}.html`;
+  return createFile(cleanName, content);
+}
+
+export async function exportFile(id: string, name: string): Promise<string> {
+  const content = await loadFileContent(id);
+  const cacheDir = `${FileSystem.cacheDirectory}${name}`;
+  await FileSystem.writeAsStringAsync(cacheDir, content, { encoding: FileSystem.EncodingType.UTF8 });
+  return cacheDir;
 }

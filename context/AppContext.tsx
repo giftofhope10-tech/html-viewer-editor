@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react';
 import { HtmlFile } from '@/types/html-file';
 import * as storage from '@/lib/storage';
+import { loadThemeMode, saveThemeMode, ThemeMode } from '@/lib/settings';
 
 interface AppContextType {
   files: HtmlFile[];
@@ -11,6 +12,8 @@ interface AppContextType {
   renameFile: (id: string, name: string) => Promise<void>;
   setActiveFile: (file: HtmlFile | null) => void;
   updateActiveContent: (content: string) => Promise<void>;
+  themeMode: ThemeMode;
+  setThemeMode: (mode: ThemeMode) => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -18,6 +21,11 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export function AppProvider({ children }: { children: ReactNode }) {
   const [files, setFiles] = useState<HtmlFile[]>([]);
   const [activeFile, setActiveFileState] = useState<HtmlFile | null>(null);
+  const [themeMode, setThemeModeState] = useState<ThemeMode>('light');
+
+  useEffect(() => {
+    loadThemeMode().then(setThemeModeState);
+  }, []);
 
   const loadFiles = useCallback(async () => {
     const loaded = await storage.loadAllFiles();
@@ -47,6 +55,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setActiveFileState(file);
   }, []);
 
+  const setThemeMode = useCallback(async (mode: ThemeMode) => {
+    setThemeModeState(mode);
+    await saveThemeMode(mode);
+  }, []);
+
   const updateActiveContent = useCallback(async (content: string) => {
     if (!activeFile) return;
     await storage.saveFile(activeFile.id, content);
@@ -66,6 +79,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         renameFile,
         setActiveFile,
         updateActiveContent,
+        themeMode,
+        setThemeMode,
       }}>
       {children}
     </AppContext.Provider>

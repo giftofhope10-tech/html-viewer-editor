@@ -50,18 +50,9 @@ export const TEMPLATES: Template[] = [
         <button class="btn">Get Started</button>
     </section>
     <section class="features">
-        <div class="feature">
-            <h3>Fast</h3>
-            <p>Lightning quick performance</p>
-        </div>
-        <div class="feature">
-            <h3>Secure</h3>
-            <p>Built with security in mind</p>
-        </div>
-        <div class="feature">
-            <h3>Reliable</h3>
-            <p>Always there when you need it</p>
-        </div>
+        <div class="feature"><h3>Fast</h3><p>Lightning quick performance</p></div>
+        <div class="feature"><h3>Secure</h3><p>Built with security in mind</p></div>
+        <div class="feature"><h3>Reliable</h3><p>Always there when you need it</p></div>
     </section>
 </body>
 </html>`,

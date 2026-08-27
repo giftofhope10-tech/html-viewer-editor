@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
 import { useAppFonts } from '@/hooks/useAppFonts';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
@@ -20,21 +21,21 @@ export default function RootLayout() {
   }
 
   return (
-    <AppProvider>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </AppProvider>
+    <SafeAreaProvider>
+      <AppProvider>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="privacy" options={{ headerShown: true, title: 'Privacy Policy', headerTintColor: Colors.dark[900], headerStyle: { backgroundColor: Colors.white }, headerBackTitle: 'Back' }} />
+          <Stack.Screen name="terms" options={{ headerShown: true, title: 'Terms & Conditions', headerTintColor: Colors.dark[900], headerStyle: { backgroundColor: Colors.white }, headerBackTitle: 'Back' }} />
+          <Stack.Screen name="about" options={{ headerShown: true, title: 'About', headerTintColor: Colors.dark[900], headerStyle: { backgroundColor: Colors.white }, headerBackTitle: 'Back' }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <StatusBar style="auto" />
+      </AppProvider>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: Colors.white,
-  },
+  loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.white },
 });

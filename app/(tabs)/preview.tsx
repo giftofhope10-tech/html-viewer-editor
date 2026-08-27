@@ -1,26 +1,9 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ViewStyle,
-  ScrollView,
-  Linking,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ViewStyle, ScrollView } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
-import {
-  RefreshCw,
-  Eye,
-  Code2,
-  FileText,
-  Monitor,
-  Smartphone,
-  Tablet,
-  ZoomIn,
-  ZoomOut,
-} from 'lucide-react-native';
+import { RefreshCw, Eye, Code2, FileText, Monitor, Smartphone, Tablet, ZoomIn, ZoomOut } from 'lucide-react-native';
 import { useApp } from '@/context/AppContext';
 import { Colors, Spacing, BorderRadius, FontSizes } from '@/lib/theme';
 
@@ -50,65 +33,43 @@ export default function PreviewScreen() {
     return activeFile.content;
   }, [activeFile, refreshKey]);
 
-  const handleRefresh = () => {
-    setRefreshKey((k) => k + 1);
-  };
-
-  const handleZoomIn = () => {
-    setZoom((z) => Math.min(z + 0.25, 2));
-  };
-
-  const handleZoomOut = () => {
-    setZoom((z) => Math.max(z - 0.25, 0.5));
-  };
+  const handleRefresh = () => setRefreshKey((k) => k + 1);
+  const handleZoomIn = () => setZoom((z) => Math.min(z + 0.25, 2));
+  const handleZoomOut = () => setZoom((z) => Math.max(z - 0.25, 0.5));
 
   if (!activeFile) {
     return (
-      <View style={styles.noFileContainer}>
+      <SafeAreaView style={styles.noFileContainer} edges={['top', 'bottom']}>
         <Eye size={64} color={Colors.dark[200]} strokeWidth={1.5} />
         <Text style={styles.noFileTitle}>Nothing to Preview</Text>
-        <Text style={styles.noFileText}>
-          Open or create an HTML file to see it rendered here
-        </Text>
-        <TouchableOpacity
-          style={styles.goFilesBtn}
-          onPress={() => router.push('/')}>
+        <Text style={styles.noFileText}>Open or create an HTML file to see it rendered here</Text>
+        <TouchableOpacity style={styles.goFilesBtn} onPress={() => router.push('/')}>
           <FileText size={18} color={Colors.white} strokeWidth={2} />
           <Text style={styles.goFilesBtnText}>Go to Files</Text>
         </TouchableOpacity>
-      </View>
+      </SafeAreaView>
     );
   }
 
   const viewportWidth = viewport === 'responsive' ? undefined : VIEWPORT_SIZES[viewport];
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <Text style={styles.fileName} numberOfLines={1}>
-            {activeFile.name}
-          </Text>
+          <Text style={styles.fileName} numberOfLines={1}>{activeFile.name}</Text>
         </View>
         <View style={styles.headerActions}>
-          <TouchableOpacity
-            style={[styles.viewportBtn, viewport === 'responsive' && styles.viewportBtnActive]}
-            onPress={() => setViewport('responsive')}>
+          <TouchableOpacity style={[styles.viewportBtn, viewport === 'responsive' && styles.viewportBtnActive]} onPress={() => setViewport('responsive')}>
             <Smartphone size={15} color={viewport === 'responsive' ? Colors.primary[600] : Colors.dark[400]} strokeWidth={2} />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.viewportBtn, viewport === 'mobile' && styles.viewportBtnActive]}
-            onPress={() => setViewport('mobile')}>
+          <TouchableOpacity style={[styles.viewportBtn, viewport === 'mobile' && styles.viewportBtnActive]} onPress={() => setViewport('mobile')}>
             <Smartphone size={15} color={viewport === 'mobile' ? Colors.primary[600] : Colors.dark[400]} strokeWidth={2} />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.viewportBtn, viewport === 'tablet' && styles.viewportBtnActive]}
-            onPress={() => setViewport('tablet')}>
+          <TouchableOpacity style={[styles.viewportBtn, viewport === 'tablet' && styles.viewportBtnActive]} onPress={() => setViewport('tablet')}>
             <Tablet size={15} color={viewport === 'tablet' ? Colors.primary[600] : Colors.dark[400]} strokeWidth={2} />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.viewportBtn, viewport === 'desktop' && styles.viewportBtnActive]}
-            onPress={() => setViewport('desktop')}>
+          <TouchableOpacity style={[styles.viewportBtn, viewport === 'desktop' && styles.viewportBtnActive]} onPress={() => setViewport('desktop')}>
             <Monitor size={15} color={viewport === 'desktop' ? Colors.primary[600] : Colors.dark[400]} strokeWidth={2} />
           </TouchableOpacity>
         </View>
@@ -128,20 +89,14 @@ export default function PreviewScreen() {
           <TouchableOpacity style={styles.toolBtn} onPress={handleRefresh}>
             <RefreshCw size={16} color={Colors.dark[600]} strokeWidth={2} />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.toolBtn}
-            onPress={() => router.push('/editor')}>
+          <TouchableOpacity style={styles.toolBtn} onPress={() => router.push('/editor')}>
             <Code2 size={16} color={Colors.dark[600]} strokeWidth={2} />
           </TouchableOpacity>
         </View>
       </View>
 
       <View style={styles.previewArea}>
-        <View
-          style={[
-            styles.webviewWrapper,
-            viewportWidth ? { width: viewportWidth, maxWidth: '100%', alignSelf: 'center' } : {},
-          ]}>
+        <View style={[styles.webviewWrapper, viewportWidth ? { width: viewportWidth, maxWidth: '100%', alignSelf: 'center' } : {}]}>
           <WebView
             key={refreshKey}
             source={{ html: htmlData, baseUrl: 'about:blank' }}
@@ -154,15 +109,15 @@ export default function PreviewScreen() {
         </View>
       </View>
 
-      <View style={styles.bottomBar}>
-        <View style={styles.bottomInfo}>
-          <Text style={styles.bottomText}>
-            {viewport === 'responsive' ? 'Responsive' : `${viewport} (${VIEWPORT_SIZES[viewport as Exclude<ViewportMode, 'responsive'>]}px)`}
-          </Text>
+      <SafeAreaView style={styles.bottomSafeArea} edges={['bottom']}>
+        <View style={styles.bottomBar}>
+          <View style={styles.bottomInfo}>
+            <Text style={styles.bottomText}>{viewport === 'responsive' ? 'Responsive' : `${viewport} (${VIEWPORT_SIZES[viewport as Exclude<ViewportMode, 'responsive'>]}px)`}</Text>
+          </View>
+          <Text style={styles.bottomSize}>{formatSize(activeFile.content)}</Text>
         </View>
-        <Text style={styles.bottomSize}>{formatSize(activeFile.content)}</Text>
-      </View>
-    </View>
+      </SafeAreaView>
+    </SafeAreaView>
   );
 }
 
@@ -189,6 +144,7 @@ const styles = StyleSheet.create({
   previewArea: { flex: 1, backgroundColor: Colors.dark[100] } as ViewStyle,
   webviewWrapper: { flex: 1, backgroundColor: Colors.white } as ViewStyle,
   webview: { flex: 1, backgroundColor: Colors.white } as ViewStyle,
+  bottomSafeArea: { backgroundColor: Colors.white } as ViewStyle,
   bottomBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: Spacing.md, paddingVertical: Spacing.sm + 2, backgroundColor: Colors.white, borderTopWidth: 1, borderTopColor: Colors.dark[100] } as ViewStyle,
   bottomInfo: {} as ViewStyle,
   bottomText: { fontFamily: 'Inter-Regular', fontSize: FontSizes.sm, color: Colors.dark[500] } as ViewStyle,

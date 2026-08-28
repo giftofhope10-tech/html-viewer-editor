@@ -27,14 +27,10 @@ module.exports = {
     web: {
       bundler: "metro",
       output: "single",
-      favicon: "./assets/images/favicon.png",
     },
     plugins: [
       "expo-router",
       "expo-font",
-      "expo-file-system",
-      "expo-document-picker",
-      "expo-sharing",
       [
         "expo-splash-screen",
         {

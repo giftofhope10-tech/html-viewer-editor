@@ -48,6 +48,3 @@ jobs:
 
       - name: Build APK
         run: eas build --platform android --profile preview --non-interactive --no-wait
-
-      - name: Build AAB
-        run: eas build --platform android --profile production --non-interactive --no-wait

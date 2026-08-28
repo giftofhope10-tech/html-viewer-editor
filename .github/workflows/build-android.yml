@@ -1,4 +1,4 @@
-name: Build Android APK and AAB
+name: Build Android APK
 
 on:
   push:
@@ -8,11 +8,13 @@ on:
 
 jobs:
   build:
-    name: Build APK and AAB
+    name: Build APK
     runs-on: ubuntu-latest
+
     permissions:
       contents: write
       packages: read
+
     env:
       EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
       EAS_PROJECT_ID: ${{ secrets.EAS_PROJECT_ID }}
@@ -25,18 +27,26 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
 
       - name: Install dependencies
         run: npm install
 
+      - name: Fix Expo dependencies
+        run: npx expo install --fix
+
+      - name: Install Expo peer dependencies
+        run: npx expo install expo-constants expo-linking react-native-svg
+
       - name: Check required secrets
         run: |
           if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
-            echo "::error::EXPO_TOKEN secret is not set. Add it in Settings > Secrets and variables > Actions"
+            echo "::error::EXPO_TOKEN secret is not set."
             exit 1
           fi
+
           if [ -z "${{ secrets.EAS_PROJECT_ID }}" ]; then
-            echo "::error::EAS_PROJECT_ID secret is not set. Add it in Settings > Secrets and variables > Actions"
+            echo "::error::EAS_PROJECT_ID secret is not set."
             exit 1
           fi
 

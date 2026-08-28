@@ -53,9 +53,12 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Build APK
+        env:
+          EAS_BUILD_DISABLE_NPM_CACHE: "1"
         run: |
           eas build \
             --platform android \
             --profile preview \
             --non-interactive \
-            --no-wait
+            --wait \
+            --clear-cache

@@ -1,20 +1,19 @@
-name: Build Android APK
+Tum likh do es me 
+name: Build Android APK and AAB
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+    tags: ['v*']
   workflow_dispatch:
 
 jobs:
   build:
-    name: Build APK
+    name: Build APK and AAB
     runs-on: ubuntu-latest
-
     permissions:
-      contents: read
+      contents: write
       packages: read
-
     env:
       EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
       EAS_PROJECT_ID: ${{ secrets.EAS_PROJECT_ID }}
@@ -29,20 +28,16 @@ jobs:
           node-version: 22
 
       - name: Install dependencies
-        run: |
-          npm install
-          npx expo install --fix
-          npx expo install expo-constants expo-linking react-native-svg
+        run: npm install
 
       - name: Check required secrets
         run: |
-          if [ -z "$EXPO_TOKEN" ]; then
-            echo "::error::EXPO_TOKEN secret is not set"
+          if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
+            echo "::error::EXPO_TOKEN secret is not set. Add it in Settings > Secrets and variables > Actions"
             exit 1
           fi
-
-          if [ -z "$EAS_PROJECT_ID" ]; then
-            echo "::error::EAS_PROJECT_ID secret is not set"
+          if [ -z "${{ secrets.EAS_PROJECT_ID }}" ]; then
+            echo "::error::EAS_PROJECT_ID secret is not set. Add it in Settings > Secrets and variables > Actions"
             exit 1
           fi
 
@@ -53,12 +48,4 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Build APK
-        env:
-          EAS_BUILD_DISABLE_NPM_CACHE: "1"
-        run: |
-          eas build \
-            --platform android \
-            --profile preview \
-            --non-interactive \
-            --wait \
-            --clear-cache
+        run: eas build --platform android --profile preview --non-interactive --no-wait

@@ -15,7 +15,7 @@ export default function RootLayout() {
   if (!fontsLoaded && !fontError) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={Colors.primary[500]} />
+        <ActivityIndicator size="large" color={Colors.primary[300]} />
       </View>
     );
   }
@@ -35,5 +35,5 @@ export default function RootLayout() {
 }
 
 const styles = StyleSheet.create({
-  loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.white },
+  loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.dark[900] },
 });

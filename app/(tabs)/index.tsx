@@ -76,9 +76,11 @@ export default function FilesScreen() {
   const handleCreateFromTemplate = async (template: Template) => {
     try {
       const name = template.id === 'blank' ? `Untitled-${files.length + 1}` : template.name;
-      await createFile(name, template.content);
+      const createdFile = await createFile(name, template.content);
+      setActiveFile(createdFile);
       setShowCreate(false);
-      router.push('/editor');
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      router.replace('/editor');
     } catch {
       Alert.alert('Error', 'Could not create file. Please try again.');
     }
@@ -203,7 +205,7 @@ export default function FilesScreen() {
             {TEMPLATES.map((template) => {
               const IconComp = TEMPLATE_ICONS[template.icon] || FilePlus;
               return (
-                <TouchableOpacity key={template.id} style={styles.templateItem} onPress={() => handleCreateFromTemplate(template)} activeOpacity={0.7}>
+                <TouchableOpacity key={template.id} style={styles.templateItem} onPress={() => void handleCreateFromTemplate(template)} activeOpacity={0.7}>
                   <View style={styles.templateIconBox}>
                     <IconComp size={22} color={Colors.primary[600]} strokeWidth={2} />
                   </View>

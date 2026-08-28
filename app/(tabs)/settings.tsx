@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { ChevronRight, Info, Moon, ShieldCheck, Sun, FileText } from 'lucide-react-native';
+import { ChevronRight, Moon, Sun, Info } from 'lucide-react-native';
 import { useApp } from '@/context/AppContext';
 import { BorderRadius, Colors, FontSizes, Spacing } from '@/lib/theme';
 
@@ -32,25 +32,17 @@ export default function SettingsScreen() {
 
       <Text style={[styles.groupTitle, { color: palette.muted }]}>Information</Text>
       <View style={[styles.section, { backgroundColor: palette.card, borderColor: palette.border }]}>
-        <SettingsLink icon={<ShieldCheck size={20} color={Colors.primary[600]} />} title="Privacy Policy" onPress={() => router.push('/privacy')} palette={palette} />
-        <SettingsLink icon={<FileText size={20} color={Colors.primary[600]} />} title="Terms & Conditions" onPress={() => router.push('/terms')} palette={palette} />
-        <SettingsLink icon={<Info size={20} color={Colors.primary[600]} />} title="About the app" onPress={() => router.push('/about')} palette={palette} last />
+        <TouchableOpacity style={styles.link} onPress={() => router.push('/about')} activeOpacity={0.7}>
+          <View style={styles.linkIcon}>
+            <Info size={20} color={Colors.primary[600]} />
+          </View>
+          <Text style={[styles.rowTitle, styles.linkTitle, { color: palette.text }]}>About Us</Text>
+          <ChevronRight size={19} color={palette.muted} />
+        </TouchableOpacity>
       </View>
 
-      <Text style={[styles.footer, { color: palette.muted }]}>HTML Viewer & Editor · Version 1.0.0</Text>
+      <Text style={[styles.footer, { color: palette.muted }]}>HTML Viewer & Editor · Version 1.3.0</Text>
     </ScrollView>
-  );
-}
-
-type Palette = typeof Colors.lightTheme;
-
-function SettingsLink({ icon, title, onPress, palette, last = false }: { icon: React.ReactNode; title: string; onPress: () => void; palette: Palette; last?: boolean }) {
-  return (
-    <TouchableOpacity style={[styles.link, !last && { borderBottomWidth: 1, borderBottomColor: palette.border }]} onPress={onPress} activeOpacity={0.7}>
-      <View style={styles.linkIcon}>{icon}</View>
-      <Text style={[styles.rowTitle, styles.linkTitle, { color: palette.text }]}>{title}</Text>
-      <ChevronRight size={19} color={palette.muted} />
-    </TouchableOpacity>
   );
 }
 

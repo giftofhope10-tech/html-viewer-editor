@@ -25,9 +25,7 @@ export default function RootLayout() {
       <AppProvider>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="privacy" options={{ headerShown: true, title: 'Privacy Policy', headerTintColor: Colors.dark[900], headerStyle: { backgroundColor: Colors.white }, headerBackTitle: 'Back' }} />
-          <Stack.Screen name="terms" options={{ headerShown: true, title: 'Terms & Conditions', headerTintColor: Colors.dark[900], headerStyle: { backgroundColor: Colors.white }, headerBackTitle: 'Back' }} />
-          <Stack.Screen name="about" options={{ headerShown: true, title: 'About', headerTintColor: Colors.dark[900], headerStyle: { backgroundColor: Colors.white }, headerBackTitle: 'Back' }} />
+          <Stack.Screen name="about" options={{ headerShown: true, title: 'About Us', headerTintColor: Colors.dark[900], headerStyle: { backgroundColor: Colors.white }, headerBackTitle: 'Back' }} />
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" />

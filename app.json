@@ -2,7 +2,7 @@
   "expo": {
     "name": "HTML Viewer & Editor",
     "slug": "html-viewer-editor",
-    "version": "1.0.0",
+    "version": "1.3.0",
     "orientation": "default",
     "icon": "./assets/images/icon.png",
     "scheme": "htmlviewer",
@@ -10,10 +10,10 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.htmlviewer.editor"
+      "bundleIdentifier": "com.iftechstudio.html_live_editor"
     },
     "android": {
-      "package": "com.htmlviewer.editor",
+      "package": "com.iftechstudio.html_live_editor",
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",

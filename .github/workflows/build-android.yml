@@ -2,8 +2,8 @@ name: Build Android APK
 
 on:
   push:
-    branches: [main]
-    tags: ['v*']
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -27,15 +27,36 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          npm install
+          npx expo install --fix
+          npx expo install expo-constants expo-linking react-native-svg
 
-      - name: Install EAS CLI
-        run: npm install -g eas-cli
+      - name: Check required secrets
+        run: |
+          if [ -z "${EXPO_TOKEN}" ]; then
+            echo "::error::EXPO_TOKEN secret is not set"
+            exit 1
+          fi
 
-      - name: Check Expo project
-        run: npx expo config --type public
+          if [ -z "${EAS_PROJECT_ID}" ]; then
+            echo "::error::EAS_PROJECT_ID secret is not set"
+            exit 1
+          fi
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Build APK
-        run: eas build --platform android --profile preview --non-interactive --no-wait
+        run: |
+          eas build \
+            --platform android \
+            --profile preview \
+            --non-interactive \
+            --no-wait

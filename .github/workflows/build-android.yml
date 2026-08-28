@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write
+      contents: read
       packages: read
 
     env:
@@ -27,7 +27,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
 
       - name: Install dependencies
         run: |
@@ -37,12 +36,12 @@ jobs:
 
       - name: Check required secrets
         run: |
-          if [ -z "${EXPO_TOKEN}" ]; then
+          if [ -z "$EXPO_TOKEN" ]; then
             echo "::error::EXPO_TOKEN secret is not set"
             exit 1
           fi
 
-          if [ -z "${EAS_PROJECT_ID}" ]; then
+          if [ -z "$EAS_PROJECT_ID" ]; then
             echo "::error::EAS_PROJECT_ID secret is not set"
             exit 1
           fi
